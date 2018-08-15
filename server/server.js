@@ -10,6 +10,17 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+app.get('/todos', (req, res) => {
+	
+	Todo.find().then((todos) => {
+		res.send({todos});
+	}, (error) => {
+		res.status(404).send(error);
+	});	
+	
+});
+
+
 app.post('/todos', (req, res) => {
 	//console.log(req.body);
 	
@@ -28,6 +39,8 @@ app.post('/todos', (req, res) => {
 app.listen(port, () => {
 	console.log(`listening on port ${port}`);
 });
+
+
 
 module.exports = {
 	app
