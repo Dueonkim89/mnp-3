@@ -20,6 +20,20 @@ app.get('/todos', (req, res) => {
 	
 });
 
+// GET/todos/id
+app.get('/todos/:id', (req, res) => {
+	const id = req.params.id;
+
+	Todo.findById(id).then(data => {
+		if (!data) {
+			res.status(404).send();
+		}
+		
+		res.send({data});
+	}).catch((error) => res.status(400).send());	
+		
+});
+
 
 app.post('/todos', (req, res) => {
 	//console.log(req.body);
