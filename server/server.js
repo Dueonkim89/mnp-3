@@ -49,6 +49,20 @@ app.post('/todos', (req, res) => {
 	
 });
 
+// delete the specific todo
+app.delete('/todos/:id', (req, res) => {
+	const id = req.params.id;
+
+	Todo.findByIdAndRemove(id).then(data => {
+		if (!data) {
+			return res.status(404).send();
+		}
+		
+		res.status(200).send({data});
+	}).catch((error) => res.status(400).send());	
+		
+});
+
 app.listen(port, () => {
 	console.log(`listening on port ${port}`);
 });
