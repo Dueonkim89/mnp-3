@@ -4,7 +4,7 @@
   "description": "REST app with Mongo",
   "main": "index.js",
   "scripts": {
-	"start": ,
+	"start": "nodemon server/server.js",
     "test": "mocha server/**/*.test.js",
 	"test-watch": "nodemon --exec \"npm test\""
   },
