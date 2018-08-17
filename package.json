@@ -4,10 +4,14 @@
   "description": "REST app with Mongo",
   "main": "index.js",
   "scripts": {
+	"start": ,
     "test": "mocha server/**/*.test.js",
 	"test-watch": "nodemon --exec \"npm test\""
   },
-  "author": "",
+  "engines": {
+	"node": "10.7.0"
+  },
+  "author": "nodemon server/server.js ",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",

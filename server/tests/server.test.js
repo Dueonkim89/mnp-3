@@ -71,7 +71,25 @@ describe('GET /todos', () => {
 	});
 });
 
+describe('GET /todos/:id', () => {
+	it('should retrieve the specific todo', (done) => {
 
+		Todo.find().then((todos) => {
+			const id = todos[0]._id;
+			const text = todos[0].text;
+			
+			request(app)
+			.get(`/todos/${id}`)
+			.expect(200)
+			.expect((res) => {
+				expect(res.body.data.text).toBe(text);
+			})		
+			.end(done);			
+		});				
+	});	
+	
+	
+});
 
 
 
