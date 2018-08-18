@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -36,7 +37,7 @@ app.get('/todos/:id', (req, res) => {
 
 app.post('/todos', (req, res) => {
 	//console.log(req.body);
-	
+	console.log(req.body);
 	var todo = new Todo({
 		text: req.body.text
 	});
@@ -67,6 +68,35 @@ app.listen(port, () => {
 	console.log(`listening on port ${port}`);
 });
 
+app.patch('/todos/:id', (req,res) => {
+	const id = req.params.id;
+	//const body = _.pick(req.body, ['text', 'completed']);
+	
+	const {text, completed} = req.body;
+	const body = {completed};
+	
+	if (text) {
+		body.text = text;
+	}
+	
+	if (typeof(completed) === 'boolean' && completed) {
+		body.completedAt = new Date().getTime();
+	} else {
+		body.completed = false;
+		body.completedAt = null;
+	}
+	
+	Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then(todo => {
+		if (!todo) {
+			return res.status(404).send();
+		}
+		
+		res.send({todo});
+	}).catch(error => {
+		res.status(400).send();
+	});
+	
+});
 
 module.exports = {
 	app

@@ -87,11 +87,33 @@ describe('GET /todos/:id', () => {
 			.end(done);			
 		});				
 	});	
-	
-	
 });
 
-
+describe('DELETE /todos/:id', () => {
+	it('should remove a todo', (done) => {
+		Todo.find().then((todos) => {
+			const id = todos[0]._id;
+			const text = todos[0].text;
+			
+			request(app)
+			.delete(`/todos/${id}`)
+			.expect(200)
+			.expect((res) => {
+				expect(res.body.data.id).toBe(id);
+			})		
+			.end((err, res) => {
+				if (err) {
+					return done(err);
+				}
+				Todo.findByIdAndRemove(id).then((todo) => {
+					expect(todo).toNotExist();
+					done();
+				}).catch((error) => done(err));
+				
+			});			
+		});				
+	});	
+});
 
 
 
