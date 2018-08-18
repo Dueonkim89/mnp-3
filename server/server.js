@@ -1,3 +1,6 @@
+let env = process.env.NODE_ENV;
+console.log(env);
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
