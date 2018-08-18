@@ -6,7 +6,7 @@ const { Todo } = require('./../models/todo');
 
 const todos = [
 {text: 'First test todo'},
-{text: 'Second test todo'}
+{text: 'Second test todo', completed: true, completedAt: 333}
 ];
 
 
@@ -89,6 +89,47 @@ describe('GET /todos/:id', () => {
 	});	
 });
 
+describe('PATCH /todos/:id', () => {
+	it('should update the todo', (done) => {
+		Todo.find().then((todos) => {
+			const firstTodo = todos[0];
+			const firstID = firstTodo._id;
+			const firstOption = {text: 'qwerty asdfg', completed: true};			
+		
+			request(app)
+				.patch(`/todos/${firstID}`)
+				.send(firstOption)
+				.expect(200)
+				.expect((res) => {
+					expect(res.body.todo.text).toBe(firstOption.text);
+					expect(res.body.todo.completed).toBe(true);
+					expect(typeof(res.body.todo.completedAt)).toBe('number');
+				})
+				.end(done);	
+		});	
+	});
+	
+	it('should clear completedAt when todo is not completed', (done) => {
+		Todo.find().then((todos) => {
+			const secondTodo = todos[1];
+			const secondID = secondTodo._id;
+			const secondOption = {text: 'qwerty asdfg', completed: false};			
+		
+			request(app)
+				.patch(`/todos/${secondID}`)
+				.send(secondOption)
+				.expect(200)
+				.expect((res) => {
+					expect(res.body.todo.text).toBe(secondOption.text);
+					expect(res.body.todo.completed).toBe(false);
+					expect(res.body.todo.completedAt).toBe(null);
+				})
+				.end(done);	
+		});			
+	});	
+	
+});
+
 describe('DELETE /todos/:id', () => {
 	it('should remove a todo', (done) => {
 		Todo.find().then((todos) => {
@@ -99,7 +140,7 @@ describe('DELETE /todos/:id', () => {
 			.delete(`/todos/${id}`)
 			.expect(200)
 			.expect((res) => {
-				expect(res.body.data.id).toBe(id);
+				expect(res.body.data.text).toBe(text);
 			})		
 			.end((err, res) => {
 				if (err) {
