@@ -8,11 +8,16 @@ const bodyParser = require('body-parser');
 const { mongoose } = require('./mongoDB/mongoose');
 const { Todo } = require('./models/todo');
 const { User } = require('./models/user');
+const { authenticate } = require('./middleware');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+
+app.get('/users/me', authenticate, (req, res) => {
+	res.send(req.user);
+});
 
 app.get('/todos', (req, res) => {
 	
@@ -116,6 +121,7 @@ app.post('/users', (req, res) => {
 	});
 	
 });
+
 
 module.exports = {
 	app
