@@ -4,6 +4,7 @@ console.log(env);
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
 
 const { mongoose } = require('./mongoDB/mongoose');
 const { Todo } = require('./models/todo');
@@ -118,17 +119,46 @@ app.post('/users', (req, res) => {
 		res.header('x-auth', token).send(user);
 	}).catch((error) => {
 		res.status(400).send(error);
+	});	
+});
+
+/*
+My method!
+app.post('/users/login', (request, res) => {
+	//destruct email and password from req.body
+	const {email, password} = request.body;
+	// find user in users collection with same email
+	User.find({email}).then((foundUser) => {
+		// hashed password must compare to password.
+		bcrypt.compare(password, foundUser[0].password, (err, match) => {
+			if (match) {
+				//send back response.body
+				res.send(foundUser);
+			} else {
+				res.send(400).send(err);
+			}
+		});		
+	}).catch((error) => {
+		res.status(404).send('Invalid Email');
+	});		
+});
+*/
+
+app.post('/users/login', (req, res) => {
+	const {email, password} = req.body;
+	User.findByCredentials(email, password).then((user) => {
+		return user.generateAuthToken().then((token) => {
+			res.header('x-auth', token).send(user);
+		});
+	}).catch((error) => {
+		res.send(400).send();
 	});
-	
 });
 
 
 module.exports = {
 	app
 };
-
-
-
 
 
 
