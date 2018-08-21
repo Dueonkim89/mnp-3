@@ -221,3 +221,48 @@ describe('POST /users', () => {
 			.end(done);			
 	});				
 });
+
+describe('POST /users/login', () => {
+	it('should login user and return auth token', (done) => {
+		const email = users[1].email;
+		const password = users[1].password;
+		request(app)
+			.post('/users/login')
+			.send({email, password})
+			.expect(200)
+			.expect( (res) => {
+				expect(res.headers['x-auth']).toBeTruthy();
+			})
+			.end((error, response) => {
+				if (error) {
+					return done(error);
+				}
+				User.findById(users[1]._id).then((user) => {
+					expect(user.tokens[0].access).toBe('auth');
+					expect(user.tokens[0].token).toBe(response.headers['x-auth']);			
+					done();
+				}).catch((error) => done(error));
+			});
+	});
+
+	it('should reject invalid login', (done) => {
+		const email = users[1].email;
+		const password = 'popcorn';
+		request(app)
+			.post('/users/login')
+			.send({email, password})
+			.expect(400)
+			.expect( (res) => {
+				expect(res.headers['x-auth']).not.toBeTruthy();
+			})		
+			.end((error, response) => {
+				if (error) {
+					return done(error);
+				}
+				User.findById(users[1]._id).then((user) => {
+					expect(user.tokens[0]).not.toBeTruthy();
+					done();
+				}).catch((error) => done(error));
+			});		
+	});		
+});
