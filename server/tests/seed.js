@@ -5,13 +5,15 @@ const jwt = require('jsonwebtoken');
 const userOneID = "5b79f0bbdc0e2f31d48cb747";
 const userTwoID = "5b79f0bbdc0e2f31d48cb748"
 
+const keys = require('./../../config/keys');
+
 const users = [{
 	_id: userOneID,
 	email: '8hourarmday@gmail.com',
 	password: 'password1',
 	tokens: [{
 		access: 'auth',
-		token: jwt.sign({_id: userOneID, access: 'auth'}, 'abc123').toString()
+		token: jwt.sign({_id: userOneID, access: 'auth'}, keys.JWT_SECRET).toString()
 	}]
 }, {
 	_id: userTwoID,
@@ -19,7 +21,7 @@ const users = [{
 	password: 'password2',
 	tokens: [{
 		access: 'auth',
-		token: jwt.sign({_id: userTwoID, access: 'auth'}, 'abc123').toString()
+		token: jwt.sign({_id: userTwoID, access: 'auth'}, keys.JWT_SECRET).toString()
 	}]	
 }];
 

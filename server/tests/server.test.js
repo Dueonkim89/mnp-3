@@ -6,6 +6,7 @@ const { Todo } = require('./../models/todo');
 const { User } = require('./../models/user');
 const {populateTodos, populateUsers, todos, users} = require('./seed');
 
+
 beforeEach(populateTodos);
 beforeEach(populateUsers);
 
